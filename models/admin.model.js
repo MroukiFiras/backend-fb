@@ -41,7 +41,7 @@ const loginAdmin = async ({ email, password }) => {
         { id: user._id, username: user.username, role: "Admin" },
         privateKey,
         {
-          expiresIn: "1m",
+          expiresIn: "5h",
         }
       );
       return { token: token, role: "Admin", username: user.username };
