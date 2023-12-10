@@ -3,9 +3,9 @@ const cloudinary = require("cloudinary").v2;
 const Product = require("../schema/product");
 
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: "dwsb4wnhn",
+  api_key: "369441825263223",
+  api_secret: "AwoR08f77vI5MgphE75z2jeYnC0",
 });
 
 const postNewProduct = async (req, res) => {
@@ -23,7 +23,16 @@ const postNewProduct = async (req, res) => {
       productDescription,
     } = req.body;
 
-    const photoUrl = await cloudinary.uploader.upload(req.body.productImages);
+    console.log(req.body);
+
+    let productImagesUrls = [];
+    // Iterate over productImages and upload each image to Cloudinary
+    for (const image of productImages) {
+      const photoUrl = await cloudinary.uploader.upload(image);
+      productImagesUrls.push(photoUrl.url);
+    }
+
+    console.log(productImagesUrls);
 
     // Create a new product using the extracted data
     const newProduct = new Product({
@@ -35,17 +44,20 @@ const postNewProduct = async (req, res) => {
       productPrice,
       productQuantity,
       productColor,
-      productImages: photoUrl.url,
+      productImages: productImagesUrls, // Use the updated array
       productDescription,
     });
 
     // Save the new product to the database
     const savedProduct = await newProduct.save();
 
+    console.log(savedProduct);
+
     res
       .status(201)
       .json({ message: "Product created successfully", product: savedProduct });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error: error.message });
   }
 };

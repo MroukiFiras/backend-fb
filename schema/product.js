@@ -10,9 +10,12 @@ const productSchema = new mongoose.Schema({
   productPrice: Number,
   productQuantity: Number,
   productColor: String, 
-  productImages: [{ type: String }], 
+  productImages: [String], 
   productDescription: String,
-  
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 const product = mongoose.model("product", productSchema);
